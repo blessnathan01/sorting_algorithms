@@ -1,66 +1,94 @@
 #include "sort.h"
 
 /**
-  * quick_sort - sorts an array of integers in ascending order
-  * @array: array to be sorted
-  * @size: array size
-  *
-  * Return: nothing.
-  */
-void quick_sort(int *array, size_t size)
+ * _swap - swap two numbers.
+ * @a: integer
+ * @b: integer
+ *
+ * Return: nothing.
+ **/
+void _swap(int *a, int *b)
 {
+	int tmp;
 
-	lomuto_qsort(array, 0, size - 1, size);
+	tmp = *a;
+	*a = *b;
+	*b = tmp;
+
 }
 
 /**
-  * lomuto_qsort - sort an array of integers
-  * @array: array to be sorted
-  * @lo: first element in array
-  * @hi: last element in array
-  * @size: array size
-  *
-  * Return: nothing.
-  */
-void lomuto_qsort(int *array, int lo, int hi, size_t size)
+ * _split - Split the array and takes the last element as pivot
+ * @arr: Array
+ * @min: first element
+ * @last: The last element
+ * @size: size
+ * 
+ * Return: integer.
+ **/
+int _split(int *arr, int min, int last, size_t size)
 {
-	int p = 0;
+	int piv;
+	int i = (min);
+	int j;
 
-	if (lo < hi)
+	piv = arr[last];
+	for (j = min; j < last; j++)
 	{
-		p = partition(array, lo, hi, size);
-		lomuto_qsort(array, lo, p - 1, size);
-		lomuto_qsort(array, p + 1, hi, size);
-	}
-}
-
-/**
-  * partition - divide the array into into
-  * @array: array to be partition
-  * @lo: first element of the array
-  * @hi: last element in the array
-  * @size: size of the array
-  *
-  * Return: the index of the array from where the check should begin
-  */
-int partition(int *array, int lo, int hi, size_t size)
-{
-	int pivot = array[hi];
-	int i = lo - 1, j, tmp;
-
-	for (j = lo; j <= hi; j++)
-	{
-		if (array[j]  <= pivot)
+		if (arr[j] <= piv)
 		{
-			i++;
+
+			_swap(&arr[i], &arr[j]);
+
+
 			if (i != j)
-			{
-				tmp = array[i];
-				array[i] = array[j];
-				array[j] = tmp;
-				print_array(array, size);
-			}
+				print_array(arr, size);
+
+			i++;
+
 		}
 	}
+
+	_swap(&arr[i], &arr[last]);
+	if (i != j)
+		print_array(arr, size);
+
 	return (i);
+}
+
+/**
+ * quick_sort_array - quick_sort_array
+ * @arr: arr
+ * @min: min
+ * @last: last
+ * @size: size
+ * 
+ * Return: nothing.
+ */
+void quick_sort_array(int *arr, int min, int last, size_t size)
+{
+
+	int piv;
+
+	if (min < last)
+	{
+		piv = _split(arr, min, last, size);
+		quick_sort_array(arr, min, (piv - 1), size);
+		quick_sort_array(arr, (piv + 1), last, size);
+	}
+}
+
+/**
+ * quick_sort -Sort an array using quick_sort algorithm
+ * @array: array
+ * @size: size
+ *
+ * Return: nothing.
+ **/
+void quick_sort(int *array, size_t size)
+{
+	if (size < 2)
+		return;
+
+	quick_sort_array(array, 0, size - 1, size);
 }
